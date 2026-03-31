@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>禮儀物品下單系統</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --surface: #ffffff;
+    --surface2: #f0ede8;
+    --border: #d8d0c4;
+    --border-light: #e8e4de;
+    --text: #2c2620;
+    --text-mid: #6b5f55;
+    --text-light: #9c8f85;
+    --accent: #6b4c3b;
+    --accent-hover: #5a3d2d;
+    --accent-light: #f5ede8;
+    --gold: #a07840;
+    --gold-light: #f5f0e8;
+    --green: #3a6048;
+    --green-light: #edf4f0;
+    --red: #8b3a3a;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-icon {
+    font-size: 22px;
+    opacity: 0.9;
+  }
+  .header-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+  .header-sub {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-left: auto;
+    letter-spacing: 1px;
+  }
+
+  /* TABS */
+  .tab-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    color: var(--text-light);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+  .tab-btn:hover:not(.active) { color: var(--text-mid); }
+
+  /* LAYOUT */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 22px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+  }
+  .card-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 1px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .card-title span { font-size: 16px; }
+
+  /* FORM GRID */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+  .form-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-mid);
+    letter-spacing: 0.5px;
+  }
+  label .req { color: var(--red); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(107,76,59,0.1);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+
+  /* RADIO GENDER */
+  .radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .radio-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-mid);
+    background: var(--surface);
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .radio-btn input { display: none; }
+  .radio-btn:has(input:checked) {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .radio-btn:hover:not(:has(input:checked)) {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  /* TOGGLE SWITCH for 牌位 */
+  .toggle-group { display: flex; gap: 8px; }
+  .toggle-btn {
+    flex: 1;
+    padding: 9px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: center;
+    background: var(--surface);
+    color: var(--text-mid);
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .toggle-btn.selected {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* VENDOR SECTIONS */
+  .vendor-section {
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .vendor-header {
+    background: var(--surface2);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .vendor-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+  }
+  .vendor-toggle {
+    width: 36px;
+    height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .vendor-toggle::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .vendor-section.enabled .vendor-toggle {
+    background: var(--green);
+  }
+  .vendor-section.enabled .vendor-toggle::after {
+    transform: translateX(16px);
+  }
+  .vendor-body {
+    display: none;
+    padding: 16px;
+    border-top: 1px solid var(--border-light);
+  }
+  .vendor-section.enabled .vendor-body { display: block; }
+  .vendor-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .vendor-form-grid .full { grid-column: 1 / -1; }
+
+  /* BUTTONS */
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--accent-light); }
+
+  .btn-copy {
+    background: var(--green-light);
+    color: var(--green);
+    border: 1px solid #b8d8c8;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-copy:hover { background: var(--green); color: #fff; }
+  .btn-copy.copied { background: var(--green); color: #fff; }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 8px;
+  }
+
+  /* OUTPUT PANEL */
+  .output-area {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+    line-height: 1.8;
+    color: var(--text);
+    min-height: 80px;
+    position: relative;
+  }
+  .output-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .output-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-mid);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .output-card {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .output-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .output-card-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .line-badge {
+    background: #06c755;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--green);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    z-index: 9999;
+    transform: translateY(60px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* DB TABLE */
+  .db-table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text);
+  }
+  tr:nth-child(even) td { background: var(--surface2); }
+  tr:hover td { background: var(--accent-light); }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+    font-size: 13px;
+  }
+  .empty-state .icon { font-size: 32px; margin-bottom: 10px; }
+
+  .db-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .btn-danger {
+    background: #fff5f5;
+    color: var(--red);
+    border: 1px solid #e8c0c0;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-danger:hover { background: var(--red); color: #fff; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-m { background: #e8f0ff; color: #2255bb; }
+  .tag-f { background: #ffe8f5; color: #bb2277; }
+  .tag-o { background: var(--gold-light); color: var(--gold); }
+
+  .divider {
+    height: 1px;
+    background: var(--border-light);
+    margin: 20px 0;
+  }
+
+  .step-label {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-bottom: 16px;
+    padding: 8px 12px;
+    background: var(--gold-light);
+    border-radius: 6px;
+    border-left: 3px solid var(--gold);
+  }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid-3 { grid-template-columns: 1fr 1fr; }
+    .vendor-form-grid { grid-template-columns: 1fr; }
+    .main { padding: 12px; }
+    .header-sub { display: none; }
+  }
+
+  /* PASSWORD SCREEN */
+  #password-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  #password-screen.hidden { display: none; }
+  .pw-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 36px;
+    text-align: center;
+    width: 300px;
+    box-shadow: var(--shadow-lg);
+  }
+  .pw-icon { font-size: 36px; margin-bottom: 12px; }
+  .pw-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+  .pw-sub { font-size: 12px; color: var(--text-light); margin-bottom: 24px; }
+  .pw-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 22px;
+    text-align: center;
+    letter-spacing: 8px;
+    font-family: monospace;
+    outline: none;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .pw-input:focus { border-color: var(--accent); }
+  .pw-input.error { border-color: var(--red); animation: shake 0.3s; }
+  .pw-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: background 0.2s;
+  }
+  .pw-btn:hover { background: var(--accent-hover); }
+  .pw-error { font-size: 12px; color: var(--red); margin-top: 8px; height: 16px; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-icon">🕯️</div>
+    <div class="pw-title">禮儀下單系統</div>
+    <div class="pw-sub">請輸入密碼進入</div>
+    <input class="pw-input" type="password" id="pw-input" maxlength="10" placeholder="••••" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="pw-btn" onclick="checkPw()">進入</button>
+    <div class="pw-error" id="pw-error"></div>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div class="header-icon">🕯️</div>
+    <div class="header-title">禮儀物品下單系統</div>
+    <div class="header-sub">owt.com.tw</div>
+  </div>
+</header>
+
+<div style="max-width:900px;margin:0 auto;">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('form')">📋 填寫下單</button>
+    <button class="tab-btn" onclick="switchTab('output')">💬 LINE 訊息</button>
+    <button class="tab-btn" onclick="switchTab('db')">📊 訂單彙整</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ===== TAB 1: FORM ===== -->
+  <div class="tab-panel active" id="tab-form">
+    <div class="step-label">⬇ 填寫案件基本資料與各廠商需求，按「產生 LINE 訊息」後切換至第二頁複製貼上</div>
+
+    <!-- 基本資料 -->
+    <div class="card">
+      <div class="card-title"><span>📌</span>案件基本資料</div>
+      <div class="form-grid">
+        <div class="field">
+          <label>承辦人 <span class="req">*</span></label>
+          <input type="text" id="handler" placeholder="請輸入承辦人姓名">
+        </div>
+        <div class="field">
+          <label>案名 <span class="req">*</span></label>
+          <input type="text" id="case_name" placeholder="請輸入往生者姓名">
+        </div>
+        <div class="field">
+          <label>性別 <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-btn"><input type="radio" name="gender" value="男"> 男</label>
+            <label class="radio-btn"><input type="radio" name="gender" value="女"> 女</label>
+            <label class="radio-btn"><input type="radio" name="gender" value="其他"> 其他</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>歲數 <span class="req">*</span></label>
+          <input type="number" id="age" placeholder="歲數" min="1" max="130" style="max-width:100px">
+        </div>
+        <div class="field">
+          <label>告別式日期 <span class="req">*</span></label>
+          <input type="date" id="funeral_date">
+        </div>
+        <div class="field">
+          <label>牌位</label>
+          <div class="toggle-group">
+            <div class="toggle-btn" id="tb-yes" onclick="selectPaiwei('有')">有</div>
+            <div class="toggle-btn" id="tb-no" onclick="selectPaiwei('無')">無</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>殯儀館</label>
+          <select id="funeral_hall" onchange="checkOtherHall()">
+            <option value="">請選擇</option>
+            <option value="台北懷愛館">台北懷愛館</option>
+            <option value="板橋殯儀館">板橋殯儀館</option>
+            <option value="三峽火化場">三峽火化場</option>
+            <option value="御奠園">御奠園</option>
+            <option value="other">其他</option>
+          </select>
+          <input type="text" id="funeral_hall_other" placeholder="請輸入殯儀館名稱" style="display:none;margin-top:6px">
+        </div>
+        <div class="field">
+          <label>禮堂</label>
+          <input type="text" id="hall" placeholder="例：誦經廳入殮">
+        </div>
+        <div class="field full">
+          <label>火爐時間</label>
+          <input type="time" id="cremation_time" style="max-width:160px">
+        </div>
+      </div>
+    </div>
+
+    <!-- 棺木 -->
+    <div class="vendor-section" id="vs-coffin">
+      <div class="vendor-header" onclick="toggleVendor('coffin')">
+        <span style="font-size:18px">⚰️</span>
+        <div class="vendor-title">棺木</div>
+        <div class="vendor-toggle"></div>
+      </div>
+      <div class="vendor-body">
+        <div class="vendor-form-grid">
+          <div class="field">
+            <label>日期</label>
+            <input type="date" id="coffin_date">
+          </div>
+          <div class="field">
+            <label>廠商</label>
+            <input type="text" id="coffin_vendor" placeholder="例：東成">
+          </div>
+          <div class="field full">
+            <label>內容</label>
+            <input type="text" id="coffin_content" placeholder="例：蓮花棺一具+庫錢*3包">
+          </div>
+          <div class="field full">
+            <label>備註</label>
+            <textarea id="coffin_note" placeholder="例：早上送御奠園3樓淨身室"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 花店 -->
+    <div class="vendor-section" id="vs-flower">
+      <div class="vendor-header" onclick="toggleVendor('flower')">
+        <span style="font-size:18px">🌸</span>
+        <div class="vendor-title">花店（花山）</div>
+        <div class="vendor-toggle"></div>
+      </div>
+      <div class="vendor-body">
+        <div class="vendor-form-grid">
+          <div class="field">
+            <label>日期</label>
+            <input type="date" id="flower_date">
+          </div>
+          <div class="field">
+            <label>廠商</label>
+            <input type="text" id="flower_vendor" placeholder="廠商名稱">
+          </div>
+          <div class="field full">
+            <label>內容</label>
+            <input type="text" id="flower_content" placeholder="例：花山一組、桌花兩盆">
+          </div>
+          <div class="field full">
+            <label>備註</label>
+            <textarea id="flower_note" placeholder="備註說明"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 淨身 -->
+    <div class="vendor-section" id="vs-cleanse">
+      <div class="vendor-header" onclick="toggleVendor('cleanse')">
+        <span style="font-size:18px">🪷</span>
+        <div class="vendor-title">禮體淨身</div>
+        <div class="vendor-toggle"></div>
+      </div>
+      <div class="vendor-body">
+        <div class="vendor-form-grid">
+          <div class="field">
+            <label>日期</label>
+            <input type="date" id="cleanse_date">
+          </div>
+          <div class="field">
+            <label>廠商</label>
+            <input type="text" id="cleanse_vendor" placeholder="廠商名稱">
+          </div>
+          <div class="field full">
+            <label>內容</label>
+            <input type="text" id="cleanse_content" placeholder="例：全套淨身服務">
+          </div>
+          <div class="field full">
+            <label>備註</label>
+            <textarea id="cleanse_note" placeholder="備註說明"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 師父 -->
+    <div class="vendor-section" id="vs-master">
+      <div class="vendor-header" onclick="toggleVendor('master')">
+        <span style="font-size:18px">🙏</span>
+        <div class="vendor-title">師父</div>
+        <div class="vendor-toggle"></div>
+      </div>
+      <div class="vendor-body">
+        <div class="vendor-form-grid">
+          <div class="field">
+            <label>日期</label>
+            <input type="date" id="master_date">
+          </div>
+          <div class="field">
+            <label>廠商／師父</label>
+            <input type="text" id="master_vendor" placeholder="師父或團體名稱">
+          </div>
+          <div class="field full">
+            <label>內容</label>
+            <input type="text" id="master_content" placeholder="例：誦經三炷香、功德法會">
+          </div>
+          <div class="field full">
+            <label>備註</label>
+            <textarea id="master_note" placeholder="備註說明"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 其他 -->
+    <div class="vendor-section" id="vs-other">
+      <div class="vendor-header" onclick="toggleVendor('other')">
+        <span style="font-size:18px">📦</span>
+        <div class="vendor-title">其他</div>
+        <div class="vendor-toggle"></div>
+      </div>
+      <div class="vendor-body">
+        <div class="vendor-form-grid">
+          <div class="field">
+            <label>日期</label>
+            <input type="date" id="other_date">
+          </div>
+          <div class="field">
+            <label>廠商</label>
+            <input type="text" id="other_vendor" placeholder="廠商名稱">
+          </div>
+          <div class="field full">
+            <label>內容</label>
+            <input type="text" id="other_content" placeholder="說明品項或服務">
+          </div>
+          <div class="field full">
+            <label>備註</label>
+            <textarea id="other_note" placeholder="備註說明"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions" style="margin-top:20px">
+      <button class="btn-secondary" onclick="resetForm()">🗑 清除</button>
+      <button class="btn-primary" onclick="generateOutput()">💬 產生 LINE 訊息 →</button>
+    </div>
+  </div>
+
+  <!-- ===== TAB 2: OUTPUT ===== -->
+  <div class="tab-panel" id="tab-output">
+    <div class="step-label">⬇ 點「複製」即可直接貼至 LINE 群組</div>
+    <div id="output-container">
+      <div class="empty-state">
+        <div class="icon">💬</div>
+        尚未產生訊息，請先至「填寫下單」頁面填寫資料
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 3: DB ===== -->
+  <div class="tab-panel" id="tab-db">
+    <div class="db-actions">
+      <button class="btn-primary" onclick="exportCSV()">⬇ 匯出 CSV</button>
+      <button class="btn-danger" onclick="clearDB()">🗑 清空資料</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span>訂單彙整紀錄</div>
+      <div class="db-table-wrap" id="db-table-wrap">
+        <div class="empty-state">
+          <div class="icon">📋</div>
+          尚無訂單記錄
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="toast" id="toast">✅ 已複製到剪貼簿</div>
+
+<script>
+// ===== CONFIG — 貼上你的 Apps Script 網址 =====
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxFpMjYadeEOOCrI0TEy6KaOAqC5fLqtAJXkibBx1sWPYper-XNueqg6gexGWnIZFLK/exec';
+
+// ===== STATE =====
+let paiweiValue = '';
+let vendorEnabled = { coffin: false, flower: false, cleanse: false, master: false, other: false };
+let orders = JSON.parse(localStorage.getItem('funeral_orders') || '[]');
+
+// ===== TABS =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ===== PAIWEI =====
+function selectPaiwei(val) {
+  paiweiValue = val;
+  document.getElementById('tb-yes').classList.toggle('selected', val === '有');
+  document.getElementById('tb-no').classList.toggle('selected', val === '無');
+}
+
+// ===== OTHER HALL =====
+function checkOtherHall() {
+  const v = document.getElementById('funeral_hall').value;
+  document.getElementById('funeral_hall_other').style.display = v === 'other' ? 'block' : 'none';
+}
+
+// ===== VENDOR TOGGLE =====
+function toggleVendor(key) {
+  vendorEnabled[key] = !vendorEnabled[key];
+  document.getElementById('vs-' + key).classList.toggle('enabled', vendorEnabled[key]);
+}
+
+// ===== DATE FORMAT =====
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  const roc = d.getFullYear() - 1911;
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${roc}/${m}/${day}`;
+}
+
+function getVal(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+// ===== GENERATE =====
+function generateOutput() {
+  const handler = getVal('handler');
+  const caseName = getVal('case_name');
+  const genderEl = document.querySelector('input[name="gender"]:checked');
+  const gender = genderEl ? genderEl.value : '';
+  const age = getVal('age');
+  const funeralDate = formatDate(getVal('funeral_date'));
+  const paiwei = paiweiValue || '未填';
+  const hallSel = getVal('funeral_hall');
+  const hallName = hallSel === 'other' ? getVal('funeral_hall_other') : (hallSel || '');
+  const hall = getVal('hall');
+  const cremTime = getVal('cremation_time');
+
+  // base block
+  const baseBlock = `【告別式下單】
+承辦人：${handler || '（未填）'}
+案名：${caseName || '（未填）'}
+性別/歲數：${gender}${age}歲
+告別式日期：${funeralDate}
+牌位：${paiwei}
+殯儀館：${hallName}
+禮堂：${hall}
+火爐：${cremTime ? cremTime.replace(':', '點').replace(/^0/, '') : ''}`;
+
+  const vendorDefs = [
+    { key: 'coffin',  emoji: '⚰️', title: '棺木' },
+    { key: 'flower',  emoji: '🌸', title: '花店' },
+    { key: 'cleanse', emoji: '🪷', title: '禮體淨身' },
+    { key: 'master',  emoji: '🙏', title: '師父' },
+    { key: 'other',   emoji: '📦', title: '其他' },
+  ];
+
+  const outputs = [];
+  const dbRow = { handler, caseName, gender, age, funeralDate, paiwei, hallName, hall, cremTime, items: [] };
+
+  vendorDefs.forEach(def => {
+    if (!vendorEnabled[def.key]) return;
+    const date = formatDate(getVal(def.key + '_date'));
+    const vendor = getVal(def.key + '_vendor');
+    const content = getVal(def.key + '_content');
+    const note = getVal(def.key + '_note');
+
+    let block = baseBlock + '\n\n';
+    block += `【${def.title}】\n`;
+    if (vendor) block += `${vendor}：${content}\n`;
+    else if (content) block += `${content}\n`;
+    if (date) block += `🌟日期：${date}${note ? note : ''}\n`;
+    else if (note) block += `🌟備註：${note}\n`;
+
+    outputs.push({ title: def.title, emoji: def.emoji, text: block.trim() });
+    dbRow.items.push({ type: def.title, date, vendor, content, note });
+  });
+
+  // Save locally + sync to Google Sheets
+  if (handler || caseName) {
+    const entry = { ...dbRow, timestamp: new Date().toLocaleString('zh-TW'), synced: false };
+    orders.push(entry);
+    localStorage.setItem('funeral_orders', JSON.stringify(orders));
+    if (sessionStorage.getItem('funeral_auth') === '1') {
+  document.getElementById('password-screen').classList.add('hidden');
+}
+renderDB();
+    syncToSheets(entry, orders.length - 1);
+  }
+
+  // Render output
+  const container = document.getElementById('output-container');
+  if (outputs.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div>請至少啟用一個廠商服務</div>`;
+  } else {
+    container.innerHTML = outputs.map((o, i) => `
+      <div class="output-card">
+        <div class="output-card-header">
+          <div class="output-card-title">${o.emoji} 傳給【${o.title}】廠商</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="line-badge">LINE</div>
+            <button class="btn-copy" id="copy-btn-${i}" onclick="copyText(${i})">📋 複製</button>
+          </div>
+        </div>
+        <div class="output-area" id="output-text-${i}">${escapeHtml(o.text)}</div>
+      </div>
+    `).join('');
+  }
+
+  switchTab('output');
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    if (i === 1) b.classList.add('active');
+    else b.classList.remove('active');
+  });
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ===== COPY =====
+function copyText(idx) {
+  const text = document.getElementById('output-text-' + idx).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn-' + idx);
+    btn.textContent = '✅ 已複製';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = '📋 複製'; btn.classList.remove('copied'); }, 2000);
+    showToast();
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg || '✅ 已複製到剪貼簿';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ===== RESET =====
+function resetForm() {
+  if (!confirm('確定要清除所有填寫內容嗎？')) return;
+  document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea, select').forEach(el => el.value = '');
+  document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+  paiweiValue = '';
+  document.getElementById('tb-yes').classList.remove('selected');
+  document.getElementById('tb-no').classList.remove('selected');
+  document.getElementById('funeral_hall_other').style.display = 'none';
+  Object.keys(vendorEnabled).forEach(k => {
+    vendorEnabled[k] = false;
+    document.getElementById('vs-' + k).classList.remove('enabled');
+  });
+}
+
+// ===== SYNC TO GOOGLE SHEETS =====
+async function syncToSheets(entry, idx) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') return;
+  try {
+    // 用 iframe 送出 POST，避免 CORS 問題（本地 file:// 與 GitHub Pages 皆適用）
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = APPS_SCRIPT_URL;
+    form.target = 'hidden-iframe';
+    form.style.display = 'none';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(entry);
+    form.appendChild(input);
+
+    let iframe = document.getElementById('hidden-iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.name = 'hidden-iframe';
+      iframe.id = 'hidden-iframe';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    // 等待約 3 秒後標記成功（iframe 送出無法確認回傳）
+    setTimeout(() => {
+      orders[idx].synced = true;
+      localStorage.setItem('funeral_orders', JSON.stringify(orders));
+      renderDB();
+      showToast('✅ 資料已送出至 Google Sheets');
+    }, 3000);
+
+  } catch (e) {
+    console.warn('Sheets sync failed:', e);
+    showToast('⚠️ 同步失敗，請聯絡管理員');
+  }
+}
+
+// ===== DB =====
+function renderDB() {
+  const wrap = document.getElementById('db-table-wrap');
+  if (orders.length === 0) {
+    wrap.innerHTML = `<div class="empty-state"><div class="icon">📋</div>尚無訂單記錄</div>`;
+    return;
+  }
+
+  const genderTag = g => {
+    if (g === '男') return '<span class="tag tag-m">男</span>';
+    if (g === '女') return '<span class="tag tag-f">女</span>';
+    return '<span class="tag tag-o">其他</span>';
+  };
+
+  const syncStatus = s => s.synced
+    ? '<span style="color:var(--green);font-size:12px;font-weight:600">✅ 已同步</span>'
+    : (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE'
+        ? '<span style="color:var(--text-light);font-size:11px">未設定</span>'
+        : '<span style="color:var(--red);font-size:11px">⏳ 待同步</span>');
+
+  let rows = orders.map((o, i) => {
+    const itemSummary = (o.items || []).map(it => it.type).join('、') || '—';
+    return `<tr>
+      <td>${i + 1}</td>
+      <td>${o.timestamp}</td>
+      <td>${o.handler || '—'}</td>
+      <td>${o.caseName || '—'}</td>
+      <td>${genderTag(o.gender)} ${o.age ? o.age + '歲' : ''}</td>
+      <td>${o.funeralDate || '—'}</td>
+      <td>${o.paiwei || '—'}</td>
+      <td>${o.hallName || '—'}</td>
+      <td>${o.hall || '—'}</td>
+      <td>${o.cremTime || '—'}</td>
+      <td>${itemSummary}</td>
+      <td>${syncStatus(o)}</td>
+      <td><button class="btn-danger" style="padding:4px 10px;font-size:11px" onclick="deleteOrder(${i})">刪除</button></td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `<table>
+    <thead><tr>
+      <th>#</th><th>填寫時間</th><th>承辦人</th><th>案名</th>
+      <th>性別/歲</th><th>告別式日期</th><th>牌位</th>
+      <th>殯儀館</th><th>禮堂</th><th>火爐</th><th>下單項目</th><th>Sheets 同步</th><th>操作</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function deleteOrder(idx) {
+  if (!confirm('確定刪除此筆記錄？')) return;
+  orders.splice(idx, 1);
+  localStorage.setItem('funeral_orders', JSON.stringify(orders));
+  renderDB();
+}
+
+function clearDB() {
+  if (!confirm('確定清空所有訂單記錄？此操作無法復原')) return;
+  orders = [];
+  localStorage.setItem('funeral_orders', JSON.stringify(orders));
+  renderDB();
+}
+
+function exportCSV() {
+  if (orders.length === 0) { alert('無資料可匯出'); return; }
+  const headers = ['#','填寫時間','承辦人','案名','性別','歲數','告別式日期','牌位','殯儀館','禮堂','火爐時間','下單項目'];
+  const rows = orders.map((o, i) => [
+    i + 1, o.timestamp, o.handler, o.caseName, o.gender, o.age,
+    o.funeralDate, o.paiwei, o.hallName, o.hall, o.cremTime,
+    (o.items || []).map(it => it.type).join('/')
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `禮儀下單記錄_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+
+// ===== PASSWORD =====
+const CORRECT_PW = '1008';
+function checkPw() {
+  const input = document.getElementById('pw-input');
+  const err = document.getElementById('pw-error');
+  if (input.value === CORRECT_PW) {
+    document.getElementById('password-screen').classList.add('hidden');
+    sessionStorage.setItem('funeral_auth', '1');
+  } else {
+    input.classList.add('error');
+    err.textContent = '密碼錯誤，請再試一次';
+    setTimeout(() => { input.classList.remove('error'); input.value = ''; }, 600);
+  }
+}
+
+// Init
+renderDB();
+</script>
+</body>
+</html>
