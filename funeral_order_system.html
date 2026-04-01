@@ -116,10 +116,20 @@
   .sync-pending { color: var(--text-light); font-size: 11px; }
   .step-label { font-size: 11px; color: var(--text-light); margin-bottom: 16px; padding: 8px 12px; background: var(--gold-light); border-radius: 6px; border-left: 3px solid var(--gold); }
 
+  .page-btn { background: var(--surface); color: var(--text-mid); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: 'Noto Sans TC', sans-serif; }
+  .page-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+  .page-btn:disabled { opacity: 0.4; cursor: default; }
+  .filter-tag { display: inline-flex; align-items: center; gap: 4px; background: var(--accent-light); color: var(--accent); border: 1px solid #d4b8ae; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; }
+  .filter-tag:hover { background: var(--accent); color: #fff; }
+  td.clickable { cursor: pointer; color: var(--accent); text-decoration: underline dotted; }
+  td.clickable:hover { color: var(--accent-hover); }
+
   @media (max-width: 600px) {
     .form-grid, .vendor-form-grid { grid-template-columns: 1fr; }
     .main { padding: 12px; }
     .header-sub { display: none; }
+    #tab-db .card > div:first-child { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -263,11 +273,47 @@
       <button class="btn-primary" onclick="exportCSV()">⬇ 匯出 CSV</button>
       <button class="btn-danger" onclick="clearDB()">🗑 清空資料</button>
     </div>
+
+    <!-- 搜尋與篩選 -->
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end">
+        <div class="field">
+          <label>🔍 關鍵字搜尋</label>
+          <input type="text" id="search-keyword" placeholder="案名、承辦人、殯儀館…" oninput="applyFilter()">
+        </div>
+        <div class="field">
+          <label>📅 告別式日期</label>
+          <input type="date" id="filter-date" onchange="applyFilter()">
+        </div>
+        <div class="field">
+          <label>👤 承辦人</label>
+          <select id="filter-handler" onchange="applyFilter()">
+            <option value="">全部</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>🏛 殯儀館</label>
+          <select id="filter-hall" onchange="applyFilter()">
+            <option value="">全部</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+        <button class="btn-secondary" style="padding:7px 16px;font-size:12px" onclick="clearFilter()">✕ 清除篩選</button>
+        <span id="filter-count" style="font-size:12px;color:var(--text-light)"></span>
+      </div>
+    </div>
+
     <div class="card">
-      <div class="card-title"><span>📊</span>訂單彙整紀錄</div>
+      <div class="card-title" style="justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:8px"><span>📊</span>訂單彙整紀錄</div>
+        <div id="page-info" style="font-size:12px;font-weight:400;color:var(--text-light)"></div>
+      </div>
       <div class="db-table-wrap" id="db-table-wrap">
         <div class="empty-state"><div class="icon">📋</div>尚無訂單記錄</div>
       </div>
+      <!-- 分頁 -->
+      <div id="pagination" style="display:flex;gap:6px;justify-content:center;padding-top:16px;flex-wrap:wrap"></div>
     </div>
   </div>
 
@@ -509,21 +555,106 @@ function viewOrderMessages(idx) {
 }
 
 // DB
+var currentPage = 1;
+var PAGE_SIZE = 50;
+var filteredOrders = [];
+
+function updateFilterOptions() {
+  var handlerSet = {}; orders.forEach(function(o){if(o.handler) handlerSet[o.handler]=1;});
+  var handlers = Object.keys(handlerSet).sort();
+  var hallSet = {}; orders.forEach(function(o){if(o.hallName) hallSet[o.hallName]=1;});
+  var halls = Object.keys(hallSet).sort();
+  var hSel = document.getElementById('filter-handler');
+  var halSel = document.getElementById('filter-hall');
+  if (!hSel || !halSel) return;
+  var hVal = hSel.value; var halVal = halSel.value;
+  hSel.innerHTML = '<option value="">全部</option>' + handlers.map(function(h){return '<option value="'+h+'"'+(h===hVal?' selected':'')+'>'+h+'</option>';}).join('');
+  halSel.innerHTML = '<option value="">全部</option>' + halls.map(function(h){return '<option value="'+h+'"'+(h===halVal?' selected':'')+'>'+h+'</option>';}).join('');
+}
+
+function applyFilter() {
+  var keyword = (document.getElementById('search-keyword').value||'').trim().toLowerCase();
+  var date = document.getElementById('filter-date').value;
+  var handler = document.getElementById('filter-handler').value;
+  var hall = document.getElementById('filter-hall').value;
+  filteredOrders = orders.filter(function(o, i) {
+    o._origIdx = i;
+    if (keyword && !(
+      (o.caseName||'').toLowerCase().includes(keyword) ||
+      (o.handler||'').toLowerCase().includes(keyword) ||
+      (o.hallName||'').toLowerCase().includes(keyword) ||
+      (o.hall||'').toLowerCase().includes(keyword) ||
+      (o.paiwei||'').toLowerCase().includes(keyword) ||
+      (o.funeralDate||'').includes(keyword)
+    )) return false;
+    if (date && o.funeralDate !== formatDate(date)) return false;
+    if (handler && o.handler !== handler) return false;
+    if (hall && o.hallName !== hall) return false;
+    return true;
+  });
+  currentPage = 1;
+  renderDBPage();
+  var count = document.getElementById('filter-count');
+  if (count) count.textContent = (keyword||date||handler||hall) ? ('共找到 ' + filteredOrders.length + ' 筆') : '';
+}
+
+function clearFilter() {
+  document.getElementById('search-keyword').value = '';
+  document.getElementById('filter-date').value = '';
+  document.getElementById('filter-handler').value = '';
+  document.getElementById('filter-hall').value = '';
+  applyFilter();
+}
+
+function filterBy(field, value) {
+  clearFilter();
+  if (field === 'handler') { document.getElementById('filter-handler').value = value; }
+  else if (field === 'hall') { document.getElementById('filter-hall').value = value; }
+  else if (field === 'date') { document.getElementById('search-keyword').value = value; }
+  applyFilter();
+}
+
 function renderDB() {
+  updateFilterOptions();
+  applyFilter();
+}
+
+function renderDBPage() {
   var wrap = document.getElementById('db-table-wrap');
-  if (orders.length === 0) { wrap.innerHTML = '<div class="empty-state"><div class="icon">📋</div>尚無訂單記錄</div>'; return; }
+  var pageInfo = document.getElementById('page-info');
+  var pagination = document.getElementById('pagination');
+
+  if (filteredOrders.length === 0) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">📋</div>' + (orders.length === 0 ? '尚無訂單記錄' : '找不到符合的記錄') + '</div>';
+    if (pageInfo) pageInfo.textContent = '';
+    if (pagination) pagination.innerHTML = '';
+    return;
+  }
+
+  var totalPages = Math.ceil(filteredOrders.length / PAGE_SIZE);
+  if (currentPage > totalPages) currentPage = totalPages;
+  var start = (currentPage - 1) * PAGE_SIZE;
+  var pageData = filteredOrders.slice(start, start + PAGE_SIZE);
+
+  if (pageInfo) pageInfo.textContent = '第 ' + currentPage + ' / ' + totalPages + ' 頁，共 ' + filteredOrders.length + ' 筆';
+
   var gTag = function(g) { return g === '男' ? '<span class="tag tag-m">男</span>' : g === '女' ? '<span class="tag tag-f">女</span>' : g ? '<span class="tag tag-o">其他</span>' : ''; };
   var syncTag = function(o) { return o.synced ? '<span class="sync-ok">✅ 已同步</span>' : '<span class="sync-pending">⏳ 待同步</span>'; };
-  var rows = orders.map(function(o, i) {
+
+  var rows = pageData.map(function(o) {
+    var i = o._origIdx;
+    var handlerEnc = encodeURIComponent(o.handler||'');
+    var hallEnc = encodeURIComponent(o.hallName||'');
+    var dateVal = o.funeralDate||'';
     return '<tr>' +
       '<td>' + (i+1) + '</td>' +
       '<td>' + (o.timestamp||'—') + '</td>' +
-      '<td>' + (o.handler||'—') + '</td>' +
+      '<td class="clickable" onclick="filterBy(\'handler\',decodeURIComponent(\''+handlerEnc+'\'))" title="篩選此承辦人">' + (o.handler||'—') + '</td>' +
       '<td>' + (o.caseName||'—') + '</td>' +
       '<td>' + gTag(o.gender) + ' ' + (o.age ? o.age+'歲' : '') + '</td>' +
-      '<td>' + (o.funeralDate||'—') + '</td>' +
+      '<td class="clickable" onclick="filterBy(\'date\',\''+dateVal+'\')" title="篩選此日期">' + (o.funeralDate||'—') + '</td>' +
       '<td>' + (o.paiwei||'—') + '</td>' +
-      '<td>' + (o.hallName||'—') + '</td>' +
+      '<td class="clickable" onclick="filterBy(\'hall\',decodeURIComponent(\''+hallEnc+'\'))" title="篩選此殯儀館">' + (o.hallName||'—') + '</td>' +
       '<td>' + (o.hall||'—') + '</td>' +
       '<td>' + (o.cremTime||'—') + '</td>' +
       '<td>' + ((o.items||[]).map(function(it){return it.type;}).join('、')||'—') + '</td>' +
@@ -533,11 +664,35 @@ function renderDB() {
       '<button class="btn-danger" style="padding:4px 10px;font-size:11px" onclick="deleteOrder(' + i + ')">刪除</button>' +
       '</td></tr>';
   }).join('');
+
   wrap.innerHTML = '<table><thead><tr>' +
-    '<th>#</th><th>填寫時間</th><th>承辦人</th><th>案名</th><th>性別/歲</th>' +
-    '<th>告別式日期</th><th>牌位</th><th>殯儀館</th><th>禮堂</th><th>火爐</th>' +
+    '<th>#</th><th>填寫時間</th><th>承辦人 ↕</th><th>案名</th><th>性別/歲</th>' +
+    '<th>告別式日期 ↕</th><th>牌位</th><th>殯儀館 ↕</th><th>禮堂</th><th>火爐</th>' +
     '<th>下單項目</th><th>Sheets 同步</th><th>操作</th>' +
     '</tr></thead><tbody>' + rows + '</tbody></table>';
+
+  // 分頁按鈕
+  if (pagination) {
+    var btns = '';
+    btns += '<button class="page-btn" onclick="goPage(' + (currentPage-1) + ')"' + (currentPage===1?' disabled':'') + '>‹ 上一頁</button>';
+    var startP = Math.max(1, currentPage-2);
+    var endP = Math.min(totalPages, currentPage+2);
+    if (startP > 1) btns += '<button class="page-btn" onclick="goPage(1)">1</button>' + (startP>2?'<span style="padding:0 4px;color:var(--text-light)">…</span>':'');
+    for (var p = startP; p <= endP; p++) {
+      btns += '<button class="page-btn' + (p===currentPage?' active':'') + '" onclick="goPage(' + p + ')">' + p + '</button>';
+    }
+    if (endP < totalPages) btns += (endP<totalPages-1?'<span style="padding:0 4px;color:var(--text-light)">…</span>':'') + '<button class="page-btn" onclick="goPage(' + totalPages + ')">' + totalPages + '</button>';
+    btns += '<button class="page-btn" onclick="goPage(' + (currentPage+1) + ')"' + (currentPage===totalPages?' disabled':'') + '>下一頁 ›</button>';
+    pagination.innerHTML = btns;
+  }
+}
+
+function goPage(p) {
+  var totalPages = Math.ceil(filteredOrders.length / PAGE_SIZE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderDBPage();
+  document.getElementById('db-table-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function deleteOrder(idx) {
@@ -570,6 +725,7 @@ function exportCSV() {
 }
 
 // 初始化
+filteredOrders = orders.slice().map(function(o,i){o._origIdx=i;return o;});
 if (sessionStorage.getItem('funeral_auth') === '1') {
   document.getElementById('password-screen').classList.add('hidden');
 }
