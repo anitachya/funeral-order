@@ -7,21 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f3ef;
-    --surface: #ffffff;
-    --surface2: #f0ede8;
-    --border: #d8d0c4;
-    --border-light: #e8e4de;
-    --text: #2c2620;
-    --text-mid: #6b5f55;
-    --text-light: #9c8f85;
-    --accent: #6b4c3b;
-    --accent-hover: #5a3d2d;
-    --accent-light: #f5ede8;
-    --gold: #a07840;
-    --gold-light: #f5f0e8;
-    --green: #3a6048;
-    --green-light: #edf4f0;
+    --bg: #f5f3ef; --surface: #ffffff; --surface2: #f0ede8;
+    --border: #d8d0c4; --border-light: #e8e4de;
+    --text: #2c2620; --text-mid: #6b5f55; --text-light: #9c8f85;
+    --accent: #6b4c3b; --accent-hover: #5a3d2d; --accent-light: #f5ede8;
+    --gold: #a07840; --gold-light: #f5f0e8;
+    --green: #3a6048; --green-light: #edf4f0;
     --red: #8b3a3a;
     --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
     --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
@@ -29,7 +20,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.6; }
 
-  /* PASSWORD */
   #password-screen { position: fixed; inset: 0; background: var(--accent); display: flex; align-items: center; justify-content: center; z-index: 9999; }
   #password-screen.hidden { display: none; }
   .pw-box { background: #fff; border-radius: 16px; padding: 40px 36px; text-align: center; width: 300px; box-shadow: var(--shadow-lg); }
@@ -42,47 +32,42 @@
   .pw-btn { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans TC', sans-serif; cursor: pointer; letter-spacing: 2px; transition: background 0.2s; }
   .pw-btn:hover { background: var(--accent-hover); }
   .pw-error { font-size: 12px; color: var(--red); margin-top: 8px; height: 16px; }
-  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
 
-  /* HEADER */
   header { background: var(--accent); color: #fff; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
   .header-inner { max-width: 900px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 14px; }
   .header-title { font-family: 'Noto Serif TC', serif; font-size: 18px; font-weight: 600; letter-spacing: 2px; }
-  .header-sub { font-size: 11px; opacity: 0.7; margin-left: auto; letter-spacing: 1px; }
+  .header-sub { font-size: 11px; opacity: 0.7; margin-left: auto; }
 
-  /* TABS */
   .tab-bar { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; max-width: 900px; margin: 0 auto; padding: 0 24px; }
   .tab-btn { background: none; border: none; padding: 12px 20px; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; color: var(--text-light); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; white-space: nowrap; }
   .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
-  .tab-btn:hover:not(.active) { color: var(--text-mid); }
 
   .main { max-width: 900px; margin: 0 auto; padding: 24px; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* CARDS */
   .card { background: var(--surface); border-radius: 10px; padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border-light); }
-  .card-title { font-family: 'Noto Serif TC', serif; font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; letter-spacing: 1px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); }
+  .card-title { font-family: 'Noto Serif TC', serif; font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); }
 
-  /* FORM */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-grid .full { grid-column: 1 / -1; }
   .field { display: flex; flex-direction: column; gap: 5px; }
-  label { font-size: 12px; font-weight: 600; color: var(--text-mid); letter-spacing: 0.5px; }
+  label { font-size: 12px; font-weight: 600; color: var(--text-mid); }
   label .req { color: var(--red); margin-left: 2px; }
-  input[type="text"], input[type="date"], input[type="time"], input[type="number"], select, textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); font-family: 'Noto Sans TC', sans-serif; font-size: 13px; color: var(--text); transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+  input[type="text"], input[type="date"], input[type="time"], input[type="number"], select, textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); font-family: 'Noto Sans TC', sans-serif; font-size: 13px; color: var(--text); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
   input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(107,76,59,0.1); }
   textarea { resize: vertical; min-height: 60px; }
+
   .radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
   .radio-btn { display: flex; align-items: center; gap: 5px; padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 13px; color: var(--text-mid); background: var(--surface); transition: all 0.2s; user-select: none; }
   .radio-btn input { display: none; }
   .radio-btn:has(input:checked) { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .radio-btn:hover:not(:has(input:checked)) { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
   .toggle-group { display: flex; gap: 8px; }
   .toggle-btn { flex: 1; padding: 9px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13px; text-align: center; background: var(--surface); color: var(--text-mid); transition: all 0.2s; user-select: none; }
   .toggle-btn.selected { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
 
-  /* VENDOR */
   .vendor-section { border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
   .vendor-header { background: var(--surface2); padding: 12px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
   .vendor-title { font-weight: 600; font-size: 13px; color: var(--text); flex: 1; }
@@ -95,36 +80,32 @@
   .vendor-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .vendor-form-grid .full { grid-column: 1 / -1; }
 
-  /* BUTTONS */
   .btn-primary { background: var(--accent); color: #fff; border: none; padding: 12px 28px; border-radius: 8px; font-family: 'Noto Sans TC', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; letter-spacing: 1px; }
-  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: var(--shadow); }
+  .btn-primary:hover { background: var(--accent-hover); }
   .btn-secondary { background: var(--surface); color: var(--accent); border: 1px solid var(--accent); padding: 10px 22px; border-radius: 8px; font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
   .btn-secondary:hover { background: var(--accent-light); }
   .btn-copy { background: var(--green-light); color: var(--green); border: 1px solid #b8d8c8; padding: 8px 16px; border-radius: 6px; font-family: 'Noto Sans TC', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
   .btn-copy:hover, .btn-copy.copied { background: var(--green); color: #fff; }
   .actions { display: flex; gap: 10px; justify-content: flex-end; padding-top: 8px; }
 
-  /* OUTPUT */
   .output-card { background: var(--surface); border: 1px solid var(--border-light); border-radius: 10px; padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); }
   .output-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .output-card-title { font-family: 'Noto Serif TC', serif; font-size: 14px; font-weight: 700; color: var(--accent); }
   .line-badge { background: #06c755; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; }
   .output-area { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 13px; white-space: pre-wrap; line-height: 1.8; color: var(--text); min-height: 80px; }
 
-  /* TOAST */
   .toast { position: fixed; bottom: 24px; right: 24px; background: var(--green); color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: var(--shadow-lg); z-index: 9999; transform: translateY(60px); opacity: 0; transition: all 0.3s; }
   .toast.show { transform: translateY(0); opacity: 1; }
 
-  /* DB */
   .db-table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
   th { background: var(--accent); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
-  td { padding: 8px 12px; border-bottom: 1px solid var(--border-light); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
   tr:nth-child(even) td { background: var(--surface2); }
   tr:hover td { background: var(--accent-light); }
   .empty-state { text-align: center; padding: 40px; color: var(--text-light); font-size: 13px; }
   .empty-state .icon { font-size: 32px; margin-bottom: 10px; }
-  .db-actions { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .db-actions { display: flex; gap: 10px; margin-bottom: 16px; }
   .btn-danger { background: #fff5f5; color: var(--red); border: 1px solid #e8c0c0; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
   .btn-danger:hover { background: var(--red); color: #fff; }
   .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
@@ -175,7 +156,6 @@
 
   <div class="tab-panel active" id="tab-form">
     <div class="step-label">⬇ 填寫案件基本資料與各廠商需求，按「產生 LINE 訊息」後切換至第二頁複製貼上</div>
-
     <div class="card">
       <div class="card-title"><span>📌</span>案件基本資料</div>
       <div class="form-grid">
@@ -226,7 +206,7 @@
     </div>
 
     <div class="vendor-section" id="vs-flower">
-      <div class="vendor-header" onclick="toggleVendor('flower')"><span style="font-size:18px">🌸</span><div class="vendor-title">花店（花山）</div><div class="vendor-toggle"></div></div>
+      <div class="vendor-header" onclick="toggleVendor('flower')"><span style="font-size:18px">🌸</span><div class="vendor-title">花店</div><div class="vendor-toggle"></div></div>
       <div class="vendor-body"><div class="vendor-form-grid">
         <div class="field"><label>日期</label><input type="date" id="flower_date"></div>
         <div class="field"><label>廠商</label><input type="text" id="flower_vendor" placeholder="廠商名稱"></div>
@@ -295,35 +275,57 @@
 
 <div class="toast" id="toast"></div>
 
-
 <script>
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxFpMjYadeEOOCrI0TEy6KaOAqC5fLqtAJXkibBx1sWPYper-XNueqg6gexGWnIZFLK/exec';
-const CORRECT_PW = '1008';
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxFpMjYadeEOOCrI0TEy6KaOAqC5fLqtAJXkibBx1sWPYper-XNueqg6gexGWnIZFLK/exec';
+var CORRECT_PW = '1008';
 
-let paiweiValue = '';
-let vendorEnabled = { coffin: false, flower: false, cleanse: false, master: false, other: false };
-let orders = JSON.parse(localStorage.getItem('funeral_orders') || '[]');
+var paiweiValue = '';
+var vendorEnabled = { coffin: false, flower: false, cleanse: false, master: false, other: false };
+var orders = JSON.parse(localStorage.getItem('funeral_orders') || '[]');
 
 // 密碼
 function checkPw() {
-  const input = document.getElementById('pw-input');
-  const err = document.getElementById('pw-error');
+  var input = document.getElementById('pw-input');
+  var err = document.getElementById('pw-error');
   if (input.value === CORRECT_PW) {
     document.getElementById('password-screen').classList.add('hidden');
     sessionStorage.setItem('funeral_auth', '1');
   } else {
     input.classList.add('error');
     err.textContent = '密碼錯誤，請再試一次';
-    setTimeout(() => { input.classList.remove('error'); input.value = ''; }, 600);
+    setTimeout(function() { input.classList.remove('error'); input.value = ''; }, 600);
   }
 }
 
 // Tab
 function switchTab(tab) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
   document.getElementById('tab-' + tab).classList.add('active');
   document.getElementById('btn-' + tab).classList.add('active');
+  if (tab === 'output') {
+    var saved = localStorage.getItem('funeral_last_outputs');
+    var container = document.getElementById('output-container');
+    if (saved && container.children.length === 0) {
+      renderOutputs(JSON.parse(saved));
+    }
+  }
+}
+
+function renderOutputs(outputs) {
+  var container = document.getElementById('output-container');
+  if (!outputs || outputs.length === 0) return;
+  container.innerHTML = outputs.map(function(o, i) {
+    return '<div class="output-card">' +
+      '<div class="output-card-header">' +
+      '<div class="output-card-title">' + o.emoji + ' 傳給【' + o.title + '】廠商</div>' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+      '<div class="line-badge">LINE</div>' +
+      '<button class="btn-copy" id="copy-btn-' + i + '" onclick="copyText(' + i + ')">📋 複製</button>' +
+      '</div></div>' +
+      '<div class="output-area" id="output-text-' + i + '">' + escapeHtml(o.text) + '</div>' +
+      '</div>';
+  }).join('');
 }
 
 // 表單
@@ -333,8 +335,7 @@ function selectPaiwei(val) {
   document.getElementById('tb-no').classList.toggle('selected', val === '無');
 }
 function checkOtherHall() {
-  document.getElementById('funeral_hall_other').style.display =
-    document.getElementById('funeral_hall').value === 'other' ? 'block' : 'none';
+  document.getElementById('funeral_hall_other').style.display = document.getElementById('funeral_hall').value === 'other' ? 'block' : 'none';
 }
 function toggleVendor(key) {
   vendorEnabled[key] = !vendorEnabled[key];
@@ -342,162 +343,201 @@ function toggleVendor(key) {
 }
 function formatDate(dateStr) {
   if (!dateStr) return '';
-  const d = new Date(dateStr);
-  return `${d.getFullYear() - 1911}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+  var d = new Date(dateStr);
+  return (d.getFullYear() - 1911) + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0');
 }
-function getVal(id) { return (document.getElementById(id)?.value || '').trim(); }
+function getVal(id) { return (document.getElementById(id) ? document.getElementById(id).value : '').trim(); }
 
 // 產生訊息
 function generateOutput() {
-  const handler = getVal('handler');
-  const caseName = getVal('case_name');
-  const gender = (document.querySelector('input[name="gender"]:checked') || {}).value || '';
-  const age = getVal('age');
-  const funeralDate = formatDate(getVal('funeral_date'));
-  const paiwei = paiweiValue || '未填';
-  const hallSel = getVal('funeral_hall');
-  const hallName = hallSel === 'other' ? getVal('funeral_hall_other') : hallSel;
-  const hall = getVal('hall');
-  const cremTime = getVal('cremation_time');
-  const cremDisplay = cremTime ? cremTime.replace(':', '點').replace(/^0/, '') : '';
+  var handler = getVal('handler');
+  var caseName = getVal('case_name');
+  var genderEl = document.querySelector('input[name="gender"]:checked');
+  var gender = genderEl ? genderEl.value : '';
+  var age = getVal('age');
+  var funeralDate = formatDate(getVal('funeral_date'));
+  var paiwei = paiweiValue || '未填';
+  var hallSel = getVal('funeral_hall');
+  var hallName = hallSel === 'other' ? getVal('funeral_hall_other') : hallSel;
+  var hall = getVal('hall');
+  var cremTime = getVal('cremation_time');
+  var cremDisplay = cremTime ? cremTime.replace(':', '點').replace(/^0/, '') : '';
 
-  const baseBlock = `【告別式下單】
-承辦人：${handler || '（未填）'}
-案名：${caseName || '（未填）'}
-性別/歲數：${gender}${age}歲
-告別式日期：${funeralDate}
-牌位：${paiwei}
-殯儀館：${hallName}
-禮堂：${hall}
-火爐：${cremDisplay}`;
+  var baseBlock = '【告別式下單】\n' +
+    '承辦人：' + (handler || '（未填）') + '\n' +
+    '案名：' + (caseName || '（未填）') + '\n' +
+    '性別/歲數：' + gender + age + '歲\n' +
+    '告別式日期：' + funeralDate + '\n' +
+    '牌位：' + paiwei + '\n' +
+    '殯儀館：' + hallName + '\n' +
+    '禮堂：' + hall + '\n' +
+    '火爐：' + cremDisplay;
 
-  const vendorDefs = [
-    { key: 'coffin', emoji: '⚰️', title: '棺木' },
-    { key: 'flower', emoji: '🌸', title: '花店' },
+  var vendorDefs = [
+    { key: 'coffin',  emoji: '⚰️', title: '棺木' },
+    { key: 'flower',  emoji: '🌸', title: '花店' },
     { key: 'cleanse', emoji: '🪷', title: '禮體淨身' },
-    { key: 'master', emoji: '🙏', title: '師父' },
-    { key: 'other', emoji: '📦', title: '其他' },
+    { key: 'master',  emoji: '🙏', title: '師父' },
+    { key: 'other',   emoji: '📦', title: '其他' },
   ];
 
-  const outputs = [];
-  const dbRow = { handler, caseName, gender, age, funeralDate, paiwei, hallName, hall, cremTime, timestamp: new Date().toLocaleString('zh-TW'), synced: false, items: [] };
+  var outputs = [];
+  var dbRow = { handler: handler, caseName: caseName, gender: gender, age: age, funeralDate: funeralDate, paiwei: paiwei, hallName: hallName, hall: hall, cremTime: cremTime, timestamp: new Date().toLocaleString('zh-TW'), synced: false, items: [] };
 
-  vendorDefs.forEach(def => {
+  vendorDefs.forEach(function(def) {
     if (!vendorEnabled[def.key]) return;
-    const date = formatDate(getVal(def.key + '_date'));
-    const vendor = getVal(def.key + '_vendor');
-    const content = getVal(def.key + '_content');
-    const note = getVal(def.key + '_note');
-    let block = baseBlock + '\n\n【' + def.title + '】\n';
+    var date = formatDate(getVal(def.key + '_date'));
+    var vendor = getVal(def.key + '_vendor');
+    var content = getVal(def.key + '_content');
+    var note = getVal(def.key + '_note');
+    var block = baseBlock + '\n\n【' + def.title + '】\n';
     if (vendor) block += vendor + '：' + content + '\n';
     else if (content) block += content + '\n';
     if (date || note) block += '🌟日期：' + date + (note || '') + '\n';
     outputs.push({ title: def.title, emoji: def.emoji, text: block.trim() });
-    dbRow.items.push({ type: def.title, date, vendor, content, note });
+    dbRow.items.push({ type: def.title, date: date, vendor: vendor, content: content, note: note });
   });
 
   if (handler || caseName) {
     orders.push(dbRow);
     localStorage.setItem('funeral_orders', JSON.stringify(orders));
-    const idx = orders.length - 1;
+    var idx = orders.length - 1;
     renderDB();
     syncToSheets(dbRow, idx);
   }
 
-  const container = document.getElementById('output-container');
+  localStorage.setItem('funeral_last_outputs', JSON.stringify(outputs));
+
+  var container = document.getElementById('output-container');
   if (outputs.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div>請至少啟用一個廠商服務</div>`;
+    container.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div>請至少啟用一個廠商服務</div>';
   } else {
-    container.innerHTML = outputs.map((o, i) => `
-      <div class="output-card">
-        <div class="output-card-header">
-          <div class="output-card-title">${o.emoji} 傳給【${o.title}】廠商</div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="line-badge">LINE</div>
-            <button class="btn-copy" id="copy-btn-${i}" onclick="copyText(${i})">📋 複製</button>
-          </div>
-        </div>
-        <div class="output-area" id="output-text-${i}">${escapeHtml(o.text)}</div>
-      </div>`).join('');
+    renderOutputs(outputs);
   }
-  switchTab('output');
+
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-output').classList.add('active');
+  document.getElementById('btn-output').classList.add('active');
 }
 
 function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// Sheets 同步
+// 同步
 async function syncToSheets(entry, idx) {
   if (!APPS_SCRIPT_URL) return;
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
+    var res = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(entry),
       redirect: 'follow',
+      body: JSON.stringify(entry),
     });
-    const json = await res.json();
+    var json = await res.json();
     if (json.result === 'success') {
       orders[idx].synced = true;
       localStorage.setItem('funeral_orders', JSON.stringify(orders));
       renderDB();
       showToast('✅ 已同步至 Google Sheets');
     }
-  } catch (e) {
-    console.warn('Sheets sync failed:', e.message);
-    showToast('⚠️ 資料已存本機，部署後可自動同步');
+  } catch(e) {
+    console.warn('sync failed:', e.message);
+    showToast('⚠️ 同步失敗，請確認網路連線');
   }
 }
 
 // 複製
 function copyText(idx) {
-  const text = document.getElementById('output-text-' + idx).innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('copy-btn-' + idx);
+  var text = document.getElementById('output-text-' + idx).innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById('copy-btn-' + idx);
     btn.textContent = '✅ 已複製';
     btn.classList.add('copied');
-    setTimeout(() => { btn.innerHTML = '📋 複製'; btn.classList.remove('copied'); }, 2000);
+    setTimeout(function() { btn.innerHTML = '📋 複製'; btn.classList.remove('copied'); }, 2000);
     showToast('✅ 已複製到剪貼簿');
   });
 }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
+  var t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  setTimeout(function() { t.classList.remove('show'); }, 3000);
 }
 
-// 清除表單
+// 清除
 function resetForm() {
   if (!confirm('確定要清除所有填寫內容嗎？')) return;
-  document.querySelectorAll('input[type="text"],input[type="date"],input[type="time"],input[type="number"],textarea,select').forEach(el => el.value = '');
-  document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[type="text"],input[type="date"],input[type="time"],input[type="number"],textarea,select').forEach(function(el) { el.value = ''; });
+  document.querySelectorAll('input[type="radio"]').forEach(function(el) { el.checked = false; });
   paiweiValue = '';
   document.getElementById('tb-yes').classList.remove('selected');
   document.getElementById('tb-no').classList.remove('selected');
   document.getElementById('funeral_hall_other').style.display = 'none';
-  Object.keys(vendorEnabled).forEach(k => { vendorEnabled[k] = false; document.getElementById('vs-' + k).classList.remove('enabled'); });
+  Object.keys(vendorEnabled).forEach(function(k) { vendorEnabled[k] = false; document.getElementById('vs-' + k).classList.remove('enabled'); });
+}
+
+// 查看訂單訊息
+function viewOrderMessages(idx) {
+  var o = orders[idx];
+  if (!o || !o.items || o.items.length === 0) { alert('此筆訂單沒有廠商項目'); return; }
+  var emojiMap = { '棺木':'⚰️', '花店':'🌸', '禮體淨身':'🪷', '師父':'🙏', '其他':'📦' };
+  var cremDisplay = (o.cremTime || '').replace(':', '點').replace(/^0/, '');
+  var baseBlock = '【告別式下單】\n' +
+    '承辦人：' + (o.handler||'') + '\n' +
+    '案名：' + (o.caseName||'') + '\n' +
+    '性別/歲數：' + (o.gender||'') + (o.age||'') + '歲\n' +
+    '告別式日期：' + (o.funeralDate||'') + '\n' +
+    '牌位：' + (o.paiwei||'') + '\n' +
+    '殯儀館：' + (o.hallName||'') + '\n' +
+    '禮堂：' + (o.hall||'') + '\n' +
+    '火爐：' + cremDisplay;
+  var outputs = o.items.map(function(item) {
+    var emoji = emojiMap[item.type] || '📦';
+    var block = baseBlock + '\n\n【' + item.type + '】\n';
+    if (item.vendor) block += item.vendor + '：' + (item.content||'') + '\n';
+    else if (item.content) block += item.content + '\n';
+    if (item.date || item.note) block += '🌟日期：' + (item.date||'') + (item.note||'') + '\n';
+    return { title: item.type, emoji: emoji, text: block.trim() };
+  });
+  localStorage.setItem('funeral_last_outputs', JSON.stringify(outputs));
+  renderOutputs(outputs);
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-output').classList.add('active');
+  document.getElementById('btn-output').classList.add('active');
 }
 
 // DB
 function renderDB() {
-  const wrap = document.getElementById('db-table-wrap');
-  if (orders.length === 0) { wrap.innerHTML = `<div class="empty-state"><div class="icon">📋</div>尚無訂單記錄</div>`; return; }
-  const gTag = g => g === '男' ? '<span class="tag tag-m">男</span>' : g === '女' ? '<span class="tag tag-f">女</span>' : g ? '<span class="tag tag-o">其他</span>' : '';
-  const syncTag = o => o.synced ? '<span class="sync-ok">✅ 已同步</span>' : '<span class="sync-pending">⏳ 待同步</span>';
-  const rows = orders.map((o, i) => `<tr>
-    <td>${i+1}</td><td>${o.timestamp}</td><td>${o.handler||'—'}</td><td>${o.caseName||'—'}</td>
-    <td>${gTag(o.gender)} ${o.age?o.age+'歲':''}</td><td>${o.funeralDate||'—'}</td><td>${o.paiwei||'—'}</td>
-    <td>${o.hallName||'—'}</td><td>${o.hall||'—'}</td><td>${o.cremTime||'—'}</td>
-    <td>${(o.items||[]).map(it=>it.type).join('、')||'—'}</td>
-    <td>${syncTag(o)}</td>
-    <td><button class="btn-danger" style="padding:4px 10px;font-size:11px" onclick="deleteOrder(${i})">刪除</button></td>
-  </tr>`).join('');
-  wrap.innerHTML = `<table><thead><tr>
-    <th>#</th><th>填寫時間</th><th>承辦人</th><th>案名</th><th>性別/歲</th>
-    <th>告別式日期</th><th>牌位</th><th>殯儀館</th><th>禮堂</th><th>火爐</th>
-    <th>下單項目</th><th>Sheets 同步</th><th>操作</th>
-  </tr></thead><tbody>${rows}</tbody></table>`;
+  var wrap = document.getElementById('db-table-wrap');
+  if (orders.length === 0) { wrap.innerHTML = '<div class="empty-state"><div class="icon">📋</div>尚無訂單記錄</div>'; return; }
+  var gTag = function(g) { return g === '男' ? '<span class="tag tag-m">男</span>' : g === '女' ? '<span class="tag tag-f">女</span>' : g ? '<span class="tag tag-o">其他</span>' : ''; };
+  var syncTag = function(o) { return o.synced ? '<span class="sync-ok">✅ 已同步</span>' : '<span class="sync-pending">⏳ 待同步</span>'; };
+  var rows = orders.map(function(o, i) {
+    return '<tr>' +
+      '<td>' + (i+1) + '</td>' +
+      '<td>' + (o.timestamp||'—') + '</td>' +
+      '<td>' + (o.handler||'—') + '</td>' +
+      '<td>' + (o.caseName||'—') + '</td>' +
+      '<td>' + gTag(o.gender) + ' ' + (o.age ? o.age+'歲' : '') + '</td>' +
+      '<td>' + (o.funeralDate||'—') + '</td>' +
+      '<td>' + (o.paiwei||'—') + '</td>' +
+      '<td>' + (o.hallName||'—') + '</td>' +
+      '<td>' + (o.hall||'—') + '</td>' +
+      '<td>' + (o.cremTime||'—') + '</td>' +
+      '<td>' + ((o.items||[]).map(function(it){return it.type;}).join('、')||'—') + '</td>' +
+      '<td>' + syncTag(o) + '</td>' +
+      '<td style="display:flex;gap:6px;align-items:center">' +
+      '<button class="btn-secondary" style="padding:4px 10px;font-size:11px;white-space:nowrap" onclick="viewOrderMessages(' + i + ')">查看訊息</button>' +
+      '<button class="btn-danger" style="padding:4px 10px;font-size:11px" onclick="deleteOrder(' + i + ')">刪除</button>' +
+      '</td></tr>';
+  }).join('');
+  wrap.innerHTML = '<table><thead><tr>' +
+    '<th>#</th><th>填寫時間</th><th>承辦人</th><th>案名</th><th>性別/歲</th>' +
+    '<th>告別式日期</th><th>牌位</th><th>殯儀館</th><th>禮堂</th><th>火爐</th>' +
+    '<th>下單項目</th><th>Sheets 同步</th><th>操作</th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table>';
 }
 
 function deleteOrder(idx) {
@@ -516,12 +556,16 @@ function clearDB() {
 
 function exportCSV() {
   if (orders.length === 0) { alert('無資料可匯出'); return; }
-  const headers = ['#','填寫時間','承辦人','案名','性別','歲數','告別式日期','牌位','殯儀館','禮堂','火爐時間','下單項目','已同步'];
-  const rows = orders.map((o,i) => [i+1,o.timestamp,o.handler,o.caseName,o.gender,o.age,o.funeralDate,o.paiwei,o.hallName,o.hall,o.cremTime,(o.items||[]).map(it=>it.type).join('/'),o.synced?'是':'否']);
-  const csv = [headers,...rows].map(r=>r.map(c=>`"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
-  a.download = `禮儀下單記錄_${new Date().toISOString().slice(0,10)}.csv`;
+  var headers = ['#','填寫時間','承辦人','案名','性別','歲數','告別式日期','牌位','殯儀館','禮堂','火爐時間','下單項目','已同步'];
+  var rows = orders.map(function(o, i) {
+    return [i+1, o.timestamp, o.handler, o.caseName, o.gender, o.age, o.funeralDate, o.paiwei, o.hallName, o.hall, o.cremTime, (o.items||[]).map(function(it){return it.type;}).join('/'), o.synced?'是':'否'];
+  });
+  var csv = [headers].concat(rows).map(function(r) {
+    return r.map(function(c) { return '"' + (c||'').toString().replace(/"/g,'""') + '"'; }).join(',');
+  }).join('\n');
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'}));
+  a.download = '禮儀下單記錄_' + new Date().toISOString().slice(0,10) + '.csv';
   a.click();
 }
 
